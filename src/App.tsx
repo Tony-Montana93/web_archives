@@ -1,57 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useEffect, useState } from 'react'
 import './App.css';
+import HomePage from './components/HomePage';
+import { Button } from 'react-bootstrap';
 
 function App() {
+  const [searchUri, setSearchUri] = useState('www.facebook.com')
+  const [searchDate, setSearchDate] = useState('20100101')
+  const [imageUrl, setImageUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    fetch(`https://archive.org/wayback/available?url=${searchUri}&timestamp=${searchDate}`)
+      .then(res => res.json())
+      .then(data => {
+        setImageUrl(data.archived_snapshots.closest.url || null)
+      })
+
+  }, [])
+  const fetchImage = () => {
+    console.log(imageUrl)
+    if (imageUrl.length > 0) {
+      setLoading(true)
+      fetch('https://cors-anywhere.herokuapp.com/'+imageUrl)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        setLoading(false)
+      })
+        .catch(error => {
+          setLoading(false)
+          console.log(error)
+      })
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      <HomePage />
+      {imageUrl ? (
+        <>
+        <Button disabled={loading} onClick={fetchImage}>{loading ? 'Loading...' : 'Fetch Image'}</Button>
+        </>
+      ) : ''}
+    </>
   );
 }
 
