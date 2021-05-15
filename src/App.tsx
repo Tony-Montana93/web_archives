@@ -1,44 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './App.css';
 import HomePage from './components/HomePage';
-import { Button } from 'react-bootstrap';
+import _ from 'lodash';
+import {Row} from 'react-bootstrap'
 
 function App() {
-  const [searchUri, setSearchUri] = useState('www.facebook.com')
+  const [searchUri, setSearchUri] = useState('https://www.google.com')
   const [searchDate, setSearchDate] = useState('20100101')
   const [imageUrl, setImageUrl] = useState('')
   const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    fetch(`https://archive.org/wayback/available?url=${searchUri}&timestamp=${searchDate}`)
-      .then(res => res.json())
-      .then(data => {
-        setImageUrl(data.archived_snapshots.closest.url || null)
-      })
 
-  }, [])
-  const fetchImage = () => {
-    console.log(imageUrl)
-    if (imageUrl.length > 0) {
-      setLoading(true)
-      fetch('https://cors-anywhere.herokuapp.com/'+imageUrl)
+  function search(event: any) {
+    event.preventDefault()
+    setImageUrl('')
+    setLoading(true)
+    const date = new Date(searchDate)
+    const parsedDate = date.getFullYear().toString() + date.getMonth().toString() + date.getDay().toString()
+    fetch(`https://archive.org/wayback/available?url=${searchUri}&timestamp=${parsedDate}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
-        setLoading(false)
+        setImageUrl(_.get(data, 'archived_snapshots.closest.url', 'https://www.google.com'))
       })
-        .catch(error => {
-          setLoading(false)
-          console.log(error)
-      })
-    }
   }
+
   return (
     <>
-      <HomePage />
+      <HomePage loading={loading} search={search} onChange={setSearchUri} uri={searchUri} onChangeDate={setSearchDate} date={searchDate} />
       {imageUrl ? (
-        <>
-        <Button disabled={loading} onClick={fetchImage}>{loading ? 'Loading...' : 'Fetch Image'}</Button>
-        </>
+        <Row style={{height: '100vh'}}>
+          <iframe id="frame" src={imageUrl} onLoad={() => setLoading(false)}></iframe>
+        </Row>
       ) : ''}
     </>
   );

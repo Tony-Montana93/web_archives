@@ -3,8 +3,29 @@
   background-color: azure;
 }
 
+ .css {
+  background-image: url('https://cdn.pixabay.com/photo/2015/10/29/14/38/web-1012467_1280.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 html {
     background-color: azure;
+}
+
+iframe{
+        width: 99%;
+        border: 2px dashed rgb(168, 40, 40);
+    }
+
+h1 {
+  color: white;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+p {
+  color: white;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 

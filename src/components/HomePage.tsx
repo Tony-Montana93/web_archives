@@ -1,41 +1,32 @@
-import React, { Component } from 'react';
-import '../App.css';
-import { Jumbotron, Form, Button, Container, Row, Col } from 'react-bootstrap';
-export default class HomePage extends Component {
-    render() {
-      return (
-        <Container>
-          <Row className='justify-content-center d-flex'>
-            <Col lg={6} sm={12}>
-            <div className='App'>
-                <h1>Welcome to the HealthCare MarketPlace Education Center</h1>
-            <p>Please sign in/up to access all the educational content</p>
-            <Jumbotron>
-                <Form>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
-                    <Form.Text className="text-muted">
-                      We'll never share your email with anyone else.
-                    </Form.Text>
-                  </Form.Group>
+import React from 'react';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+const HomePage = (props: any) => {
+  return (
+    <div className="css">
+      <Container fluid >
+          <Row className='justify-content-center d-flex'>
+          <Col lg={6} sm={12}>
+                <h1>Welcome To The Internet Archives!</h1>
+            <p><i>Explore billions of webpage snap shots saved over time</i></p>
+                <Form>
+                  <Form.Group controlId="searchUri">
+                    <Form.Label>URL</Form.Label>
+                    <Form.Control value={props.uri} onChange={event => props.onChange(event.target.value)} type="url" placeholder="Enter URL" />
                   </Form.Group>
-                  <Form.Group controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Remember Me" />
+                  <Form.Group controlId="searchDate">
+                    <Form.Label>Date</Form.Label>
+                    <Form.Control value={props.date} onChange={event => props.onChangeDate(event.target.value)} type="date" placeholder="Enter Date" />
                   </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Submit
+                  <Button disabled={props.loading} onClick={event => props.search(event)} variant="primary" type="button">
+                    Search
                   </Button>
-                </Form>
-              </Jumbotron>
-            </div>
+            </Form>
             </Col>
           </Row>
         </Container>
-        )
-    }
+    </div>
+  )
 }
+
+export default HomePage
